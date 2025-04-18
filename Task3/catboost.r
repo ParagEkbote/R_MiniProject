@@ -1,11 +1,17 @@
-# Load required libraries
-library(data.table)
-library(caret)
-library(catboost)
-library(ggplot2)
-library(pROC)
-library(e1071)  # for confusionMatrix
-library(reshape2)
+# Set user library path (if needed)
+.libPaths("~/R/x86_64-pc-linux-gnu-library/4.3")
+
+# List of required packages
+packages <- c("data.table", "caret", "catboost", "ggplot2", "pROC", "e1071", "reshape2")
+
+# Install missing packages
+installed <- rownames(installed.packages())
+to_install <- setdiff(packages, installed)
+if (length(to_install)) install.packages(to_install, dependencies = TRUE)
+
+# Load all packages
+invisible(lapply(packages, library, character.only = TRUE))
+
 
 # Load dataset
 df <- fread("transformed_land_mines.csv")
