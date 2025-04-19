@@ -23,9 +23,14 @@ y_test <- y[-train_index]
 train_pool <- catboost.load_pool(data = X_train, label = y_train)
 test_pool <- catboost.load_pool(data = X_test, label = y_test)
 
-# Train model
+# Train model with tuned hyperparameters
 params <- list(
-  iterations = 250,
+  iterations = 517,
+  depth = 4,
+  learning_rate = 0.013302095484120483,
+  l2_leaf_reg = 0.04450546192783469,
+  border_count = 107,
+  bagging_temperature = 0.564828924702632,
   loss_function = "MultiClass",
   eval_metric = "Accuracy",
   verbose = 50
@@ -44,7 +49,7 @@ cat(sprintf("Length of predictions: %d | Length of test labels: %d\n", length(y_
 
 # Evaluate
 accuracy <- sum(y_pred == y_test) / length(y_test)
-cat(sprintf("✅ CatBoost Accuracy: %.4f\n", accuracy))
+cat(sprintf("✅ Final CatBoost Accuracy: %.4f\n", accuracy))
 cat(sprintf("🕒 Training Time: %.2f seconds\n", as.numeric(difftime(end_time, start_time, units = "secs"))))
 
 # Ensure matching factor levels

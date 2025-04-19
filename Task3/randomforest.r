@@ -28,15 +28,15 @@ final_model <- randomForest(
   y ~ .,
   data = train_data,
   ntree = 100,
-  maxnodes = 2^15, # mimic max_depth = 15
-  nodesize = 1,    # min_samples_leaf = 1
-  mtry = floor(sqrt(ncol(X_train))), # max_features = "sqrt"
+  maxnodes = 2^15,  # Mimic max_depth = 15
+  nodesize = 1,     # min_samples_leaf = 1
+  mtry = floor(sqrt(ncol(X_train))),  # max_features = "sqrt"
   importance = TRUE
 )
 
 # Predict
 y_pred <- predict(final_model, newdata = test_data)
-y_pred <- as.numeric(as.character(y_pred))  # ensure labels match type
+y_pred <- as.numeric(as.character(y_pred))  # Ensure labels match type
 
 # Evaluate
 accuracy <- mean(y_pred == y_test)

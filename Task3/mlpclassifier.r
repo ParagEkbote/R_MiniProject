@@ -25,7 +25,7 @@ trainIndex <- createDataPartition(data$y, p = 0.8, list = FALSE)
 trainData <- data[trainIndex, ]
 testData <- data[-trainIndex, ]
 
-# Train MLP model (1 hidden layer due to `nnet` limitation)
+# Train MLP model using approximated hyperparameters
 start_time <- Sys.time()
 mlp_model <- nnet(
   y ~ ., 
