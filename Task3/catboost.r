@@ -1,17 +1,8 @@
-# Set user library path (if needed)
-.libPaths("~/R/x86_64-pc-linux-gnu-library/4.3")
-
-# List of required packages
-packages <- c("data.table", "caret", "catboost", "ggplot2", "pROC", "e1071", "reshape2")
-
-# Install missing packages
-installed <- rownames(installed.packages())
-to_install <- setdiff(packages, installed)
-if (length(to_install)) install.packages(to_install, dependencies = TRUE)
-
-# Load all packages
-invisible(lapply(packages, library, character.only = TRUE))
-
+# Load libraries
+library(data.table)
+library(caret)
+library(ggplot2)
+library(catboost)
 
 # Load dataset
 df <- fread("transformed_land_mines.csv")
@@ -35,6 +26,7 @@ test_pool <- catboost.load_pool(data = X_test, label = y_test)
 # Train model
 params <- list(
   iterations = 250,
+  loss_function = "MultiClass",
   eval_metric = "Accuracy",
   verbose = 50
 )
@@ -44,14 +36,23 @@ model <- catboost.train(train_pool, NULL, params = params)
 end_time <- Sys.time()
 
 # Predict
-y_pred <- catboost.predict(model, test_pool)
+y_pred <- catboost.predict(model, test_pool, prediction_type = "Class")
 y_pred <- as.integer(y_pred)
+
+# Ensure matching lengths
+cat(sprintf("Length of predictions: %d | Length of test labels: %d\n", length(y_pred), length(y_test)))
 
 # Evaluate
 accuracy <- sum(y_pred == y_test) / length(y_test)
 cat(sprintf("✅ CatBoost Accuracy: %.4f\n", accuracy))
 cat(sprintf("🕒 Training Time: %.2f seconds\n", as.numeric(difftime(end_time, start_time, units = "secs"))))
-print(classification_report <- confusionMatrix(as.factor(y_pred), as.factor(y_test)))
+
+# Ensure matching factor levels
+y_pred <- factor(y_pred, levels = sort(unique(y_test)))
+y_test <- factor(y_test, levels = sort(unique(y_test)))
+
+# Confusion matrix
+print(classification_report <- confusionMatrix(y_pred, y_test))
 
 # Confusion matrix visualization
 cm <- table(Predicted = y_pred, Actual = y_test)

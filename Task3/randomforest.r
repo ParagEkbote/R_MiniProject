@@ -1,8 +1,3 @@
-if (!require("data.table")) install.packages("data.table", dependencies = TRUE)
-if (!require("caret")) install.packages("caret", dependencies = TRUE)
-if (!require("ggplot2")) install.packages("ggplot2", dependencies = TRUE)
-if (!require("randomForest")) install.packages("randomForest", dependencies = TRUE)
-
 # Load libraries
 library(data.table)
 library(caret)

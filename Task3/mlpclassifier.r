@@ -1,9 +1,3 @@
-# Install required packages if not installed
-if (!require("nnet")) install.packages("nnet", dependencies = TRUE)
-if (!require("caret")) install.packages("caret", dependencies = TRUE)
-if (!require("e1071")) install.packages("e1071", dependencies = TRUE)
-if (!require("ggplot2")) install.packages("ggplot2", dependencies = TRUE)
-
 # Load libraries
 library(nnet)
 library(caret)
@@ -52,6 +46,7 @@ cat(sprintf("✅ Final MLP Accuracy: %.4f\n", acc))
 cat(sprintf("🕒 Training Time: %.2f seconds\n\n", as.numeric(difftime(end_time, start_time, units = "secs"))))
 
 # Classification report
+preds <- factor(preds, levels = levels(testData$y))
 conf_matrix <- confusionMatrix(preds, testData$y)
 print(conf_matrix)
 
